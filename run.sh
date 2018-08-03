@@ -9,7 +9,7 @@ source /etc/profile
 
 # env vars
 export JAVA_HOME=/usr/lib/jvm/java-8-oracle/jre
-export HADOOP_VERSION=3.1.0
+export HADOOP_VERSION=3.0.3
 export HADOOP_USER=hadoop
 export HADOOP_GROUP=hadoop
 export HADOOP_BINARY_FILE=hadoop-$HADOOP_VERSION.tar.gz
@@ -35,6 +35,7 @@ export HDFS_NAMENODE_USER=$HADOOP_USER
 export HDFS_DATANODE_USER=$HADOOP_USER
 
 export HDFS_SECONDARYNAMENODE_USER=$HADOOP_USER
+export YARN_NODEMANAGER_USER=$HADOOP_USER
 export YARN_RESOURCEMANAGER_USER=$HADOOP_USER
 
 # path
@@ -57,6 +58,7 @@ fi
 if [ ! -d $HADOOP_BINARY_DIR ]; then
   echo descompactando hadoop
   tar zxf $HADOOP_BINARY_FILE
+  mkdir $HADOOP_BINARY_DIR/.ssh
   chown -R $HADOOP_USER:$HADOOP_GROUP $HADOOP_BINARY_DIR
   echo liberando ssh sem senha com chave publica para usuario $HADOOP_USER
   su -l $HADOOP_USER -c /usr/bin/ssh-keygen
@@ -112,7 +114,7 @@ else
   #su -l $HADOOP_USER -c "$HADOOP_HOME/sbin/start-all.sh"
   echo inicializar hadoop: $HADOOP_HOME
   cd $HADOOP_HOME
-  echo $HADOOP_HOME/sbin/start-all.sh
+  $HADOOP_HOME/sbin/start-all.sh
 fi
 #$HADOOP_HOME/bin/hdfs --daemon start namenode
 #$HADOOP_HOME/bin/hdfs --daemon start datanode
